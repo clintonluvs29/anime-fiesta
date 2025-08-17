@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "web/vite.config.ts",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "web/dist",
+        "buildCommand": "cd web && pnpm build"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "server"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "web/dist/$1"
+    }
+  ]
+}
