@@ -3,7 +3,7 @@
     "target": "ESNext",
     "lib": ["ESNext", "DOM"],
     "module": "ESNext",
-    "baseUrl": ".",
+    "baseUrl": "",
     "paths": {
       "@/*": ["src/*"]
     },
