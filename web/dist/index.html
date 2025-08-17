@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>One Piece Character Generator — Create Anime Art with AI</title>
+    <meta name="theme-color" content="#0a1128" />
+
+    <!-- Anime/Pirate Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Rubik:wght@400;700&family=Black+Ops+One&family=Audiowide&family=Bungee&display=swap" rel="stylesheet">
+    
+    <!-- One Piece Favicon -->
+    <link rel="icon" type="image/png" href="https://i.imgur.com/4QZQZ9q.png">
+
+    <style>
+      /* One Piece Theme Variables */
+      :root {
+        --straw-hat-red: #dc143c;
+        --straw-hat-yellow: #ffd700;
+        --straw-hat-blue: #1e90ff;
+        --nami-orange: #ff8c00;
+        --zoro-green: #228b22;
+        --sanji-black: #1a1a1a;
+        --brook-white: #f8f8ff;
+        --grand-line: #00bfff;
+        --new-world: #9400d3;
+        --devil-fruit: #ff1493;
+        
+        --bg: rgba(10, 17, 40, 0.95); /* Dark blue */
+        --surface: rgba(26, 33, 56, 0.9);
+        --card: rgba(42, 49, 82, 0.85);
+        --text: #ffffff;
+        --text-secondary: #e0e0e0;
+        --text-muted: #888888;
+        --border: rgba(255, 215, 0, 0.3); /* Gold border */
+        --accent: var(--straw-hat-red);
+        --accent-hover: #ff1744;
+        --accent-dark: #b71c1c;
+        --success: #00ff41;
+        --warning: #ffd700;
+        --error: #ff0844;
+        
+        --shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+        --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.8);
+        --shadow-pirate: 0 4px 20px rgba(0, 0, 0, 0.6), 0 0 10px rgba(220, 20, 60, 0.3);
+        --blur: blur(10px);
+        
+        --gradient-primary: linear-gradient(135deg, var(--straw-hat-red) 0%, var(--nami-orange) 100%);
+        --gradient-pirate: linear-gradient(45deg, 
+          var(--straw-hat-red) 0%, 
+          var(--straw-hat-yellow) 25%, 
+          var(--grand-line) 50%, 
+          var(--new-world) 75%, 
+          var(--straw-hat-red) 100%);
+        
+        --font-main: 'Rubik', sans-serif;
+        --font-display: 'Pirata One', cursive;
+        --font-accent: 'Black Ops One', 'Audiowide', monospace;
+      }
+
+      /* One Piece Background */
+      body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+          radial-gradient(circle at center, 
+            rgba(30, 144, 255, 0.1) 0%, 
+            rgba(0, 0, 139, 0.3) 70%,
+            rgba(10, 17, 40, 0.7) 100%),
+          url('https://i.imgur.com/JYwQZ9A.jpg') center/cover no-repeat;
+        background-attachment: fixed;
+        z-index: -10;
+        filter: brightness(0.7) contrast(1.1);
+      }
+
+      /* Jolly Roger Watermark */
+      body::after {
+        content: '';
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 80vmin;
+        height: 80vmin;
+        background: url('https://i.imgur.com/4QZQZ9q.png') center/contain no-repeat;
+        opacity: 0.05;
+        z-index: -5;
+        transform: translate(-50%, -50%);
+      }
+
+      /* Base Styles */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html, body {
+        height: 100%;
+        overflow-x: hidden;
+      }
+
+      body {
+        font-family: var(--font-main);
+        color: var(--text);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* App Container */
+      #root {
+        height: 100%;
+        width: 100%;
+        position: relative;
+      }
+
+      /* Scrollbar Styling */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.2);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--straw-hat-red);
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--nami-orange);
+      }
+
+      /* Selection Styling */
+      ::selection {
+        background: var(--straw-hat-red);
+        color: white;
+      }
+
+      /* Keyframe Animations */
+      @keyframes wave {
+        0%, 100% { transform: rotate(0deg); }
+        25% { transform: rotate(5deg); }
+        75% { transform: rotate(-5deg); }
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      /* Utility Classes */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      /* Loading Spinner */
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba(255, 215, 0, 0.3);
+        border-top: 4px solid var(--straw-hat-red);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      /* Treasure Chest Button Effect */
+      .treasure-effect {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .treasure-effect::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle, 
+          rgba(255, 215, 0, 0.8) 0%, 
+          rgba(255, 215, 0, 0) 70%
+        );
+        transform: scale(0);
+        opacity: 0;
+        transition: transform 0.5s, opacity 1s;
+      }
+
+      .treasure-effect:hover::after {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      /* Media Queries */
+      @media (max-width: 768px) {
+        :root {
+          --blur: blur(5px);
+        }
+        
+        body::before {
+          background-size: auto 150%;
+        }
+      }
+
+      @media (max-width: 480px) {
+        body::after {
+          width: 120vmin;
+          height: 120vmin;
+        }
+      }
+    </style>
+    <script type="module" crossorigin src="/assets/index-CFdmiYu_.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    
+    <!-- Optional: Add a subtle One Piece sound effect on load -->
+    <audio id="one-piece-sfx" preload="auto">
+      <source src="https://www.soundjay.com/buttons/sounds/button-09.mp3" type="audio/mpeg">
+    </audio>
+    <script>
+      // Play subtle sound when page loads
+      window.addEventListener('load', () => {
+        const sfx = document.getElementById('one-piece-sfx');
+        sfx.volume = 0.3;
+        sfx.play().catch(e => console.log('Autoplay prevented:', e));
+      });
+    </script>
+  </body>
+</html>
